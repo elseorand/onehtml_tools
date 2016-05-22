@@ -1,0 +1,142 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  </head>
+  <body>
+    <select id="language" class="element">
+      <option value="java">Java</option>
+      <option value="typescript">TypeScript</option>
+      <option value="scala">Scala</option>
+    </select>
+    <select id="publish"  class="element">
+      <option value="gui">Normal</option>
+      <option value="cui">Command Line</option>
+    </select>
+    <br/>
+    <textarea cols="30" id="input"  class="element" name="" rows="10">
+{"str":"aaa", "null": null, "obj":{"child1":100, "child2":"000"},"arr":[1, 2, 3, 4],
+"arrObj":[{"hoge":true, "fuga": false},{"hoge":null, "fuga": null}]}
+    </textarea>
+    <br/>
+    <button id="convert" class="element">convert</button>
+    <br/>
+    <textarea cols="30" id="output"  class="element" name="" rows="10"></textarea>
+    <script>
+      $(function(){
+        // utils
+        var snake2camel = function(p){
+          return p.replace(/_./g,
+                           function(s) {
+                             return s.charAt(1).toUpperCase();
+                           }
+          );
+        };
+        var camel2snake = function(p){
+          var smallhead = p.substring(0, 1).toLowerCase();
+          if(p.length === 1){
+            return smallhead;
+          }
+          smallhead += p.substring(1);
+
+          return smallhead.replace(/([A-Z])/g,
+                           function(s) {
+                             return '_' + s.charAt(0).toLowerCase();
+                           }
+          );
+        };
+        if (!String.prototype.startsWith) {
+          String.prototype.startsWith = function(searchString, position){
+            position = position || 0;
+            return this.substr(position, searchString.length) === searchString;
+          };
+        }
+        if (!String.prototype.endsWith) {
+          String.prototype.endsWith = function(searchString, position) {
+            var subjectString = this.toString();
+            if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+              position = subjectString.length;
+            }
+            position -= searchString.length;
+            var lastIndex = subjectString.indexOf(searchString, position);
+            return lastIndex !== -1 && lastIndex === position;
+          };
+        }
+        Object.defineProperty(Array.prototype, 'flatMap', {
+          value: function (f, self) {
+            self = self || this;
+            return this.reduce(function (ys, x) {
+              return ys.concat(f.call(self, x));
+            }, []);
+          },
+          enumerable: false,
+        });
+        String.prototype.capitalize = function(){
+          var rtn = this.charAt(0).toUpperCase();
+          if(this.length > 1){
+            return rtn + this.slice(1);
+          }else {
+            return rtn;
+          }
+        }
+
+        var langFuncsOf = {
+          "java":{
+            "type":function(src){
+              if(typeof src === 'string'){
+                return 'String';
+              }else if(typeof src === 'number'){
+                return 'Long';
+              }else if(typeof src === 'boolean'){
+                return 'Boolean';
+              }else{
+                return '';
+              }
+            }
+          },
+          "typescript":{
+            "type":function(src){
+              if(typeof src === 'string'){
+                return 'string';
+              }else if(typeof src === 'number'){
+                return 'number';
+              }else if(typeof src === 'boolean'){
+                return 'boolean';
+              }else{
+                return '';
+              }
+            }
+          }
+        };
+
+
+        // funcs
+
+        // state
+
+        // element
+
+        var el = {};
+        var els_element = $('.element').each(function(i, obj){
+          var _this = $(this);
+          el[_this.attr('id')] = _this;
+        });
+        el.convert.on('click',function(i, obj){
+          var _this = $(this);
+          try {
+            var rawJson = JSON.parse(el.input.val());
+          }catch(e){
+            alert(e);return ;
+          }
+          Object.keys(rawJson).forEach(function(rawFieldKey,i,a){
+            var rawFieldVal = rawJson[rawFieldKey];
+
+
+          });
+        }).trigger('click');
+      });
+    </script>
+  </body>
+</html>
