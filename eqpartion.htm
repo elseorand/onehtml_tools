@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>equivallent partition</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+      .container {
+        margin-right:2rem;
+        border: 1px solid grey;
+        padding:1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <article style="display:flex; flex-flow:nowrap column;">
+      <section class="container" style="display:flex; flex-flow:nowrap column;">
+        <section><span >[1,2,3,4,5]</span> / x mod 2 === 0 => </section>
+        <section>true: [2,4]</section>
+        <section>false: [1,3,5]</section>
+      </section>
+      eqpartitionを実装して↓と↑が一致するように実装しよう
+      <section id="result" class="container" style="display:flex; flex-flow:nowrap column;">
+        <section><span id="test"></span> / x mod 2 === 0 => </section>
+      </section>
+
+    </article>
+    <script>
+      /**
+       * この中で予約語は
+       * function: 関数宣言
+       * true: boolean
+       * false: boolean
+       * var: 変数宣言（ただし、Javascriptは関数がfirst classのため、以下のfunctorのように関数を変数として扱える）
+       * return: いわずもがな
+       * null: C言語流にはアドレス00000000でよく、NULLとtypedefされているもの
+       * undefined: null
+       */
+      $(function(){
+        var test = [1, 2, 3, 4, 5];// javascriptの配列
+        // 圏論の関手の意味ではなく、関数オブジェクト. C言語流には関数ポインタ
+        var functor = function(x){
+          return x % 2 === 0;
+        };
+
+        // jQueryというライブラリーのコードで、実行結果をHTMLに埋め込んでいる
+        var el = {};
+        $('.element').each(function(i,x){
+          var _this = $(this);
+          el[_this.attr('id')] = _this;
+        });
+        el.result = $('#result');
+        var el_test = $('#test').html(JSON.stringify(test));
+
+        // 実行
+        var res = eqpartition(test, functor)
+        // res の構造は、{key0: array0, key1: array1}
+        $('.element', el.result).remove();
+        Object.keys(res).forEach(function(key,i,a){
+          var newElm = $('<section class="element">');
+          newElm.text(key + ': ' + JSON.stringify(res[key]));
+          el.result.append(newElm);
+        });
+
+        /**
+         * 同値分割関数
+         *
+         * @param set : an array as a set to be partioned by partioning
+         * @param partioning : a function: an element of set => an object having toString() method. C言語流にはメンバー関数のこと
+         *
+         * @return an object whose key is partioning(element).toString(), and whose value is an array of elements of the set.
+         */
+        function eqpartition(set, partioning){
+          // ???
+        }
+      });
+    </script>
+  </body>
+</html>
